@@ -44,7 +44,7 @@ export default {
     return {
       username: "",
       password: "",
-      rememberMe: false,
+      rememberMe: true,
     };
   },
   components: {
@@ -82,7 +82,7 @@ export default {
 
     .remember {
       font-family: "Consolas";
-      margin-bottom: 20px;
+      margin-bottom: 40px;
       display: flex;
       align-items: center;
 

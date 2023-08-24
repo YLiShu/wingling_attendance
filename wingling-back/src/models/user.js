@@ -32,7 +32,6 @@ const userSchema = new mongoose.Schema({
         unique: true
     },
     targetTime: Number,
-    taskCompletion: Number,
     grade: {
         type: String,
         enum: ['大一', '大二', '大三', '大四'],

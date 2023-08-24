@@ -104,6 +104,7 @@ export default {
     font-size: 16px;
     padding: 0 10px;
     background-color: #fff;
+    border-radius: 10px;
   }
 
   input:focus ~ span {
@@ -112,6 +113,7 @@ export default {
     font-size: 16px;
     padding: 0 10px;
     background-color: #fff;
+    border-radius: 10px;
   }
 }
 </style>

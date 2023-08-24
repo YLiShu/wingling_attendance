@@ -7,6 +7,7 @@
         <div class="fix_avatar">
           <wingling-upload
             class="avatar-uploader"
+            :headers="headers"
             :action="uploadUrl"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
@@ -105,6 +106,9 @@ export default {
       newPassword: "",
       showAvatarModal: false,
       showPasswordModal: false,
+      headers: {
+        Authorization: this.$store.getters.token,
+      },
     };
   },
   components: {
@@ -174,7 +178,6 @@ export default {
         await this.$confirm("确认退出？", "提示");
         localStorage.clear();
         this.$router.push("/login");
-        done();
       } catch (err) {
         console.warn(err);
       }
@@ -200,6 +203,7 @@ export default {
     text-align: center;
     height: 40px;
     font-size: 18px;
+    padding: 5px;
     font-weight: bolder;
   }
 
@@ -266,6 +270,7 @@ export default {
           padding: 25px;
           box-sizing: border-box;
           border-radius: 10px;
+          max-width: 1000px;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 
           .close {
@@ -441,7 +446,11 @@ export default {
         background-color: rgba(0, 0, 0, 0.7);
 
         .modal-content {
-          width: 98%;
+          @media screen and (min-width: 768px) {
+            width: 660px;
+          }
+
+          width: 85%;
           display: block;
           position: absolute;
           top: 50%;

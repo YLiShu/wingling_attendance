@@ -21,7 +21,7 @@
       </div>
 
       <div class="application_count">
-        本月已申请{{ applicationHistory.length }}次补卡
+        本周已申请{{ applicationHistory.length }}次补卡
       </div>
 
       <div class="application_reason">
@@ -90,7 +90,7 @@
 <script>
 import TimePicker from "@/components/TimePicker/index.vue";
 import DatePicker from "@/components/DatePicker/index.vue";
-import { saveApplyCard, getApplyCard, clearApplyCard } from "@/utils/applyCache";
+import { saveCard, getCard, clearCard } from "@/utils/cardCache";
 import { applyMakeupClock } from "@/apis/apply/index";
 import showNotice from '@/utils/notice';
 
@@ -142,7 +142,7 @@ export default {
         timeRange: this.timeRange,
         applicationReason: this.applicationReason,
       };
-      saveApplyCard(params);
+      saveCard(params, 'applyCard');
       showNotice('success', '保存成功');
     },
     async submitApplication() {
@@ -153,7 +153,6 @@ export default {
       }
       const params = {
         userId: this.info._id,
-        realname: this.info.realname,
         date: this.selectDate,
         startTime: this.timeRange[0],
         endTime: this.timeRange[1],
@@ -166,7 +165,8 @@ export default {
       try {
         await applyMakeupClock(params);
         showNotice('success', '提交补卡申请成功', '系统已通知管理员，待处理完成后将自动通知您。');
-        clearApplyCard();
+        clearCard('applyCard');
+        this.$emit('refreshList');
       } catch (err) {
         console.warn(err);
       } finally {
@@ -177,7 +177,7 @@ export default {
     },
   },
   created() {
-    const params = getApplyCard();
+    const params = getCard('applyCard');
     if (!params) return;
     this.selectDate = params.selectDate;
     this.timeRange = params.timeRange;

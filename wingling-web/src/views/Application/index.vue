@@ -1,8 +1,18 @@
 <template>
   <div class="application">
     <Tab :activeTab="activeTab" :tabs="tabs" @changeTab="handleTabChange">
-      <SendApplication v-if="activeTab === 0" :info="info" :applicationHistory = "applicationHistory"/>
-      <ApplicationHistory v-else-if="activeTab === 1" :info="info" :applicationHistory = "applicationHistory" @changeTab="handleTabChange"/>
+      <SendApplication
+        v-if="activeTab === 0"
+        :info="info"
+        :applicationHistory="applicationHistory"
+        @refreshList="handleRefreshList"
+      />
+      <ApplicationHistory
+        v-else-if="activeTab === 1"
+        :info="info"
+        :applicationHistory="applicationHistory"
+        @changeTab="handleTabChange"
+      />
     </Tab>
   </div>
 </template>
@@ -26,12 +36,19 @@ export default {
         },
       ],
       activeTab: 0,
-      applicationHistory: []
+      applicationHistory: [],
     };
   },
   methods: {
     handleTabChange(index) {
       this.activeTab = index;
+    },
+    handleRefreshList() {
+      this.initApplyHistory();
+    },
+    async initApplyHistory() {
+      const { data } = await getApplyHistory(this.info._id);
+      this.applicationHistory = data;
     },
   },
   components: {
@@ -42,9 +59,8 @@ export default {
   computed: {
     ...mapState("user", ["info"]),
   },
-  async created() {
-    const { data } = await getApplyHistory(this.info._id);
-    this.applicationHistory = data;
+  created() {
+    this.initApplyHistory();
   },
 };
 </script>

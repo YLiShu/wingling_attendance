@@ -45,7 +45,6 @@ const user = {
             state.clock_info.clockOutTime = clockOutTime;
         },
         SET_AVATAR: (state, avatar) => {
-            console.log(avatar);
             state.info.avatar = `${process.env.VUE_APP_API_BASE_URL}${avatar}`;
         },
         CLEAR_CLOCKED_TIME(state) {

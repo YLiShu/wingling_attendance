@@ -30,7 +30,9 @@
             class="list-item"
             :key="index"
           >
-            <div class="avatar"><img :src="item.avatar" alt="avatar" /></div>
+            <div class="avatar">
+              <img :src="item.avatar" alt="avatar" :class="{'gray-avatar': !item.isClockedIn}" />
+            </div>
             <div class="user_info">
               <div class="grade">年级：{{ item.grade }}</div>
               <div class="name">姓名：{{ item.realname }}</div>
@@ -127,37 +129,27 @@ export default {
     @keyframes fancyColor {
       0% {
         color: #ff9b28;
-        /* 将红色调整为橙色 */
         text-shadow: 1px 1px #ff1493;
-        /* 将红色调整为粉红色 */
       }
 
       25% {
         color: #1e90ff;
-        /* 将绿色调整为青色 */
         text-shadow: 2px 2px #ff00ff;
-        /* 将绿色调整为紫色 */
       }
 
       50% {
         color: #ffd700;
-        /* 将蓝色调整为金色 */
         text-shadow: 3px 3px #00ffff;
-        /* 将蓝色调整为青色 */
       }
 
       75% {
         color: #8b008b;
-        /* 将黄色调整为紫色 */
         text-shadow: 4px 4px #00ff00;
-        /* 将黄色调整为绿色 */
       }
 
       100% {
         color: #ff9b28;
-        /* 将紫色调整为橙色 */
         text-shadow: 5px 5px #ffff00;
-        /* 将紫色调整为黄色 */
       }
     }
 
@@ -202,6 +194,7 @@ export default {
     box-sizing: border-box;
     padding: 5px;
     width: 100%;
+    overflow: auto;
 
     .infinite-list-wrapper {
       width: 100%;
@@ -236,6 +229,9 @@ export default {
               width: 50px;
               height: 50px;
               border-radius: 10px;
+            }
+            .gray-avatar {
+              filter: grayscale(100%);
             }
           }
 
@@ -286,13 +282,13 @@ export default {
 
 @media screen and (min-width: 540px) {
   .progress-wrapper {
-    flex: 2.5!important;
+    flex: 2.5 !important;
   }
 }
 
 @media screen and (min-width: 768px) {
   .progress-wrapper {
-    flex: 5!important;
+    flex: 5 !important;
   }
 }
 </style>

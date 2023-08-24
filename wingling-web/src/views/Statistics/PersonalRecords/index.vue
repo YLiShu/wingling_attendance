@@ -159,6 +159,11 @@ export default {
         );
 
         if (selectedRecord) {
+          // bug：当前一天未下卡，则删除那次打卡记录
+          if (selectedRecord.clockInTimes.length < selectedRecord.clockOutTimes.length) {
+            selectedRecord.clockOutTimes.shift();
+          }
+
           // 合并上班和下班时间，创建一个新的记录数组
           const combinedTimes = selectedRecord.clockInTimes.map(
             (time, index) => ({
@@ -201,19 +206,19 @@ export default {
 .personal_records {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: calc(100% - 5px);
+  border-radius: 10px;
+  margin-top: 5px;
   overflow: auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 
   .main {
     flex: 1;
     height: 100%;
     overflow: auto;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     background-color: #fff;
     box-sizing: border-box;
-    border-radius: 10px;
     padding: 10px;
-    margin-top: 5px;
 
     .header {
       display: flex;
@@ -319,9 +324,9 @@ export default {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        width: 46%; /* 调整线的长度 */
-        height: 1px; /* 调整线的粗细 */
-        background-color: #c0c4d1; /* 调整线的颜色 */
+        width: 46%;
+        height: 1px;
+        background-color: #c0c4d1;
       }
 
       &::before {

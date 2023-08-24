@@ -5,6 +5,9 @@ const makeupClockSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
+    userInfo: {
+        type: mongoose.Schema.Types.Mixed
+    },
     date: String,
     startTime: String,
     endTime: String,

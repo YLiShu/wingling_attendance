@@ -14,6 +14,11 @@ import TeamRank from './TeamRank/index.vue';
 import { mapState } from "vuex";
 
 export default {
+  components: {
+    PersonalRecords,
+    TeamRank,
+    Tab
+  },
   data() {
     return {
       tabs: [
@@ -34,16 +39,11 @@ export default {
     handleTabChange(index) {
       this.activeTab = index;
     }
-  },
-  components: {
-    PersonalRecords,
-    TeamRank,
-    Tab
   }
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .statistics {
   height: calc(100% - 96px);
   box-sizing: border-box;

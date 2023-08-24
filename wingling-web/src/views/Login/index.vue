@@ -13,6 +13,7 @@ import LoginForm from "./LoginForm/index.vue";
 import showNotice from "@/utils/notice";
 import { mapActions } from "vuex";
 import { saveLoginInfo, clearLoginInfo } from "@/utils/auth";
+import {addAdminRoutes} from '@/router/index';
 
 export default {
   data() {
@@ -37,6 +38,7 @@ export default {
           clearLoginInfo(params);
         }
         showNotice("success", "登陆成功");
+        addAdminRoutes();
         this.$router.push("/msite");
       } catch (error) {
         console.error(error);

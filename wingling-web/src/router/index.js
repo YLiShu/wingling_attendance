@@ -9,6 +9,7 @@ import Application from '@/views/Application/index.vue';
 import DetailedProfile from '@/views/Profile/DetailedProfile/index.vue';
 import store from '@/store/index';
 import showNotice from "@/utils/notice";
+import NotFound from '@/components/NotFound/index.vue';
 
 // 声明使用插件
 Vue.use(VueRouter);
@@ -53,15 +54,16 @@ const router = new VueRouter({
             path: '/login',
             component: Login,
             meta: {
-                hideFooterGuide: true
+                hideFooterGuide: true,
+                requiresAuth: false
             }
         },
         {
             path: '/',
-            redirect: '/msite',
+            redirect: '/login',
             meta: {
-                hideFooterGuide: false,
-                requiresAuth: true
+                hideFooterGuide: true,
+                requiresAuth: false
             }
         },
         {
@@ -71,9 +73,41 @@ const router = new VueRouter({
                 hideFooterGuide: true,
                 requiresAuth: true
             }
+        },
+        {
+            path: "*",
+            component: NotFound,
+            meta: {
+                hideFooterGuide: true,
+                requiresAuth: false
+            }
         }
     ]
-})
+});
+
+let dynamicRoutesAdded = false;
+
+export const addAdminRoutes = () => {
+    const isAdmin = store.getters.isAdmin;
+
+    if (isAdmin) {
+        const adminRoutes = [
+            {
+                path: '/userManagement',
+                component: () => import('@/views/UserManagement/index.vue')
+            },
+            {
+                path: '/clockManagement',
+                component: () => import('@/views/ClockManagement/index.vue')
+            }
+        ];
+
+        adminRoutes.forEach(route => {
+            router.addRoute(route);
+        });
+        dynamicRoutesAdded = true;
+    }
+}
 
 router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth) {
@@ -88,6 +122,5 @@ router.beforeEach((to, from, next) => {
     }
 })
 
-console.log(store.getters.token);
-
+addAdminRoutes();
 export default router;

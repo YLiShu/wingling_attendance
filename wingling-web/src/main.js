@@ -7,7 +7,7 @@ import '../public/assets/fonts/css/myFonts.scss'
 import '../public/assets/styles/element-ui.scss';
 import moment from 'moment';
 import md5 from 'md5';
-import { Progress,Upload, Button, Dialog, Form, FormItem, Input, Tag, Card, MessageBox, Tabs, TabPane, DatePicker, TimePicker, Empty, Calendar, Steps, Step } from 'element-ui';
+import { Progress, Upload, Button, Dialog, Form, FormItem, Input, Tag, Card, MessageBox, Tabs, TabPane, DatePicker, TimePicker, Empty, Calendar, Steps, Step, Popconfirm } from 'element-ui';
 
 Vue.component('wingling-progress', Progress);
 Vue.component('wingling-upload', Upload);
@@ -26,6 +26,8 @@ Vue.component('wingling-empty', Empty);
 Vue.component('wingling-calendar', Calendar);
 Vue.component('wingling-steps', Steps);
 Vue.component('wingling-step', Step);
+Vue.component('wingling-popconfirm', Popconfirm);
+
 Vue.prototype.$moment = moment;
 Vue.prototype.$confirm = MessageBox.confirm;
 Vue.prototype.$alert = MessageBox.alert;

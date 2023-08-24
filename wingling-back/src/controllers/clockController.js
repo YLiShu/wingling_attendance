@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const Attendance = require('../models/attendance');
 const moment = require('moment-timezone');
+const ExcelJS = require('exceljs');
 
 const clockInController = (req, res) => {
     const userId = req.body.userId;
@@ -59,8 +60,8 @@ const clockOutController = (req, res) => {
     ).lean()
         .then((updatedAttendance) => {
             // 获取一周的范围
-            const weekStart = moment.tz(clockOutTime, 'Asia/Shanghai').startOf('week').add(1, 'day');
-            const weekEnd = moment.tz(clockOutTime, 'Asia/Shanghai').endOf('week').add(1, 'day');
+            const weekStart = moment.tz('Asia/Shanghai').startOf('week').add(1, 'day');
+            const weekEnd = moment.tz('Asia/Shanghai').endOf('week').add(1, 'day');
 
             // 查询整个一周的打卡记录
             return Attendance.find({
@@ -73,6 +74,9 @@ const clockOutController = (req, res) => {
                     // 计算总时长
                     for (const record of weekAttendance) {
                         let dailyTotalDuration = 0;
+                        if (record.clockInTimes.length < record.clockOutTimes.length) {
+                            record.clockOutTimes.shift();
+                        }
                         for (let i = 0; i < record.clockInTimes.length && i < record.clockOutTimes.length; i++) {
                             const clockInTime = moment.tz(record.clockInTimes[i], 'Asia/Shanghai');
                             const clockOutTime = moment.tz(record.clockOutTimes[i], 'Asia/Shanghai');
@@ -105,5 +109,51 @@ const clockOutController = (req, res) => {
         });
 };
 
+const exportClockController = async (req, res) => {
+    try {
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('User Data');
 
-module.exports = { clockInController, clockOutController };
+        // 添加 Excel 表头
+        worksheet.addRow([
+            '姓名',
+            '学号',
+            '年级',
+            '目标时长',
+            '本周时长',
+        ]);
+        // 查询所有用户
+        const users = await User.find().exec();
+
+        // 填充数据
+        for (const user of users) {
+            worksheet.addRow([
+                user.realname,
+                user.username,
+                user.grade,
+                user.targetTime,
+                (user.totalDuration / 60).toFixed(2),
+            ]);
+        }
+
+        // 导出 Excel
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename=user_data.xlsx');
+
+        // 生成 Excel 数据流
+        const excelBuffer = await workbook.xlsx.writeBuffer();
+
+        // 设置 Content-Length 响应头
+        res.setHeader('Content-Length', excelBuffer.length);
+
+        // 发送 Excel 数据流给前端
+        res.end(excelBuffer);
+
+        console.log('Excel 文件已导出');
+    } catch (error) {
+        console.error('导出 Excel 文件时出错:', error);
+        res.status(500).send('导出 Excel 文件时出错');
+    }
+};
+
+module.exports = { clockInController, clockOutController, exportClockController };

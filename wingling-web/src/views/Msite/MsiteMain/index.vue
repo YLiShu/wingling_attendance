@@ -48,9 +48,7 @@
               </svg>
               <span>{{ clock_info.clockOutTime }} 已打卡</span>
             </div>
-            <div class="no_out" v-else>
-              未打卡
-            </div>
+            <div class="no_out" v-else>未打卡</div>
           </div>
         </div>
       </div>
@@ -72,7 +70,8 @@
 
 <script>
 import showNotice from "@/utils/notice";
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
+import { getUser } from "@/apis/userManagement/index";
 
 export default {
   data() {
@@ -93,6 +92,7 @@ export default {
   },
   methods: {
     ...mapActions("user", ["ClockIn", "ClockOut"]),
+    ...mapMutations("user", ["SET_USER_INFO", "SET_TOKEN"]),
     getTime() {
       let hour = new Date().getHours().toString().padStart(2, "0");
       let minute = new Date().getMinutes().toString().padStart(2, "0");
@@ -105,10 +105,7 @@ export default {
       };
       const now = new Date();
       const lastClockedTime = this.lastClockedTime;
-      if (
-        lastClockedTime &&
-        now.getTime() - lastClockedTime.getTime() < 5000
-      ) {
+      if (lastClockedTime && now.getTime() - lastClockedTime.getTime() < 5000) {
         return showNotice("warning", "5秒内不能再次打卡哦");
       }
       if (!this.info.isClockedIn) {
@@ -132,6 +129,15 @@ export default {
   },
   mounted() {
     this.timer = setInterval(this.getTime, 1000);
+  },
+  async created() {
+    const res = await getUser(this.info._id);
+    const { _token, ...userInfo } = res.data;
+    const modifiedUserInfo = {
+      ...userInfo,
+      avatar: `${process.env.VUE_APP_API_BASE_URL}${userInfo.avatar}`,
+    };
+    this.SET_USER_INFO(modifiedUserInfo);
   },
   beforeDestroy() {
     clearInterval(this.timer);

@@ -84,17 +84,18 @@ const editUserController = (req, res) => {
                 const { username, password, targetTime, grade, isAdmin, email } = req.body;
 
                 user.username = username;
-                user.password = md5(password);
-                user.email = email;
-
+                if (password !== undefined) {
+                    user.password = md5(password);
+                }
+                if (email !== undefined) {
+                    user.email = email;
+                }
                 if (isAdmin !== undefined) {
                     user.isAdmin = isAdmin;
                 }
-
                 if (grade !== undefined) {
                     user.grade = grade;
                 }
-
                 if (targetTime !== undefined) {
                     user.targetTime = targetTime;
                 }
@@ -151,4 +152,43 @@ const deleteUserController = (req, res) => {
     });
 };
 
-module.exports = { createUserController, editUserController, deleteUserController };
+const getUsersController = (req, res) => {
+    User.find()
+        .then((users) => {
+            res.json({
+                code: 'SUCCESS',
+                msg: '获取当前所有用户信息成功',
+                data: users
+            });
+        })
+        .catch((err) => {
+            console.error('获取当前所有用户信息失败：', err);
+            res.status(500).json({
+                code: 'SERVER_ERROR',
+                msg: '服务器错误，请稍后再试',
+                data: null
+            });
+        });
+};
+
+const getUserController = (req, res) => {
+    const userId = req.params.userId;
+    User.findById(userId)
+        .then((user) => {
+            res.json({
+                code: 'SUCCESS',
+                msg: '获取当前用户信息成功',
+                data: user
+            });
+        })
+        .catch((err) => {
+            console.error('获取当前用户信息失败：', err);
+            res.status(500).json({
+                code: 'SERVER_ERROR',
+                msg: '服务器错误，请稍后再试',
+                data: null
+            });
+        });
+}
+
+module.exports = { createUserController, editUserController, deleteUserController, getUsersController, getUserController };

@@ -7,11 +7,9 @@
         <div class="header_title_company">翼灵物联网工作室</div>
       </div>
     </div>
-    <div class="header_right">
-      <label @click="actionHandler">
+    <div class="header_right" @click="actionHandler">
         <img src="/assets/images/msite/apply.png" alt="apply" />
         <div class="header_right_action">申请</div>
-      </label>
     </div>
   </header>
 </template>
@@ -98,6 +96,7 @@ export default {
       font-size: 14px;
       color: #999;
       text-align: center;
+      margin-top: 5px;
     }
   }
 }
