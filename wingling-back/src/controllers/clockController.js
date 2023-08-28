@@ -86,7 +86,6 @@ const clockOutController = (req, res) => {
 
                         totalDuration += dailyTotalDuration;
                     }
-                    console.log(totalDuration);
 
                     // 更新用户总时长
                     return User.findByIdAndUpdate(userId, { totalDuration: totalDuration, isClockedIn: false }, { new: true }).lean()

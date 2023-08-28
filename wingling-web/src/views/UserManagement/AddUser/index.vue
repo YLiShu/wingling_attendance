@@ -228,7 +228,7 @@ export default {
         isAdmin: this.isAdmin,
         targetTime: this.targetTime,
       };
-      saveCard(params, 'createUser');
+      saveCard(params, "createUser");
       showNotice("success", "保存成功");
     },
     async submitApplication() {
@@ -245,12 +245,12 @@ export default {
         email: this.email,
         isAdmin: isAdmin,
         password: "52101314",
-        targetTime: Number(this.targetTime)
+        targetTime: Number(this.targetTime),
       };
       try {
         await createUser(params);
         showNotice("success", "创建用户成功");
-        clearCard('createUser');
+        clearCard("createUser");
       } catch (err) {
         console.warn(err);
       } finally {
@@ -264,7 +264,7 @@ export default {
     },
   },
   created() {
-    const params = getCard('createUser');
+    const params = getCard("createUser");
     if (!params) return;
     this.username = params.username;
     this.realname = params.realname;
@@ -381,6 +381,10 @@ export default {
       align-items: center;
       width: 100%;
       box-sizing: border-box;
+
+      @media screen and (min-height: 920px) {
+        position: absolute !important;
+      }
 
       .footer_left {
         flex: 1;

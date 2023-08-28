@@ -25,8 +25,17 @@ connectDB().then(() => {
     app.listen(port, () => {
         console.log(`Server is running on port ${port}`);
     });
+    // 创建定时任务，每天晚上 23:40 执行一次
+    cron.schedule('40 23 * * *', async () => {
+        try {
+            // 将用户的打卡状态设置为false
+            await User.updateMany({}, { $set: { isClockedIn: false } });
+        } catch (error) {
+            console.error('An error occurred:', error);
+        }
+    });
     // 创建定时任务，每周日 23:00 执行一次
-    cron.schedule('0 23 * * 0', async () => {
+    cron.schedule('40 23 * * 0', async () => {
         try {
             // 导出 Excel 数据
             const workbook = new ExcelJS.Workbook();
@@ -102,7 +111,6 @@ connectDB().then(() => {
             console.error('An error occurred:', error);
         }
     });
-
 }).catch((err) => {
     console.error('Failed to connect to the database:', err);
 })
