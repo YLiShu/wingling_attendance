@@ -31,7 +31,11 @@
             :key="index"
           >
             <div class="avatar">
-              <img :src="item.avatar" alt="avatar" :class="{'gray-avatar': !item.isClockedIn}" />
+              <img
+                :src="item.avatar"
+                alt="avatar"
+                :class="{ 'gray-avatar': !item.isClockedIn }"
+              />
             </div>
             <div class="user_info">
               <div class="grade">年级：{{ item.grade }}</div>
@@ -189,7 +193,7 @@ export default {
     flex-direction: column;
     background-color: #fff;
     border-radius: 10px;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: center;
     box-sizing: border-box;
     padding: 5px;

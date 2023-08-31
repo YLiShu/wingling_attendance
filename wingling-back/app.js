@@ -61,6 +61,45 @@ connectDB().then(() => {
                     user.targetTime,
                     (user.totalDuration / 60).toFixed(2),
                 ]);
+
+                // 判断是否需要发送提醒邮件
+                const targetTime = user.targetTime;
+                const totalDuration = user.totalDuration;
+                const penaltyPerHour = 2; // 罚款每少于一小时金额
+                const hoursBelowTarget = Math.floor((targetTime * 60 - totalDuration) / 60);
+
+                if (hoursBelowTarget > 0) {
+                    const penaltyAmount = hoursBelowTarget * penaltyPerHour;
+                    const mailOptions = {
+                        from: process.env.MAIL_USER,
+                        to: user.email,
+                        subject: '缴纳罚款提醒',
+                        html: `
+                            <body style="font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+                                <div style="margin: 20px auto; max-width: 600px; background-color: #ffffff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); border-radius: 10px; border: 2px solid #005ea5;">
+                                    <div style="background-color: #005ea5; padding: 20px; color: #ffffff; text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                                        <img src="https://s1.imagehub.cc/images/2023/07/29/logo.png" alt="logo.png" style="max-width: 200px;">
+                                        <h2 style="margin-top: 15px; font-family: 'Arial Black', Arial, sans-serif;">缴纳罚款提醒</h2>
+                                        <h3 style="margin-top: 10px; font-family: 'Lucida Handwriting', cursive; color: #ffffff;">翼灵物联网工作室</h3>
+                                    </div>
+                                    <div style="padding: 5px 20px;">
+                                        <p style="font-size: 18px; color: #555555; line-height: 1.6;">尊敬的用户 ${user.realname}，</p>
+                                        <p style="font-size: 18px; color: #555555; line-height: 1.6;">您本周时长 ${(user.totalDuration / 60).toFixed(2)} 小时，未达到目标时长，需要缴纳罚款。</p>
+                                        <p style="font-size: 18px; color: #555555; line-height: 1.6;">罚款金额：￥${penaltyAmount} 元</p>
+                                        <p style="font-size: 18px; color: #555555; line-height: 1.6;">请尽快缴纳罚款。</p>
+                                        <img src="https://s1.imagehub.cc/images/2023/08/31/imagee99e7e4f29307695.png" alt="money.png" style="max-width: 200px; display: block; margin: 20px auto;">
+                                    </div>
+                                    <div style="display: flex; align-items: center; justify-content: center; margin-top: 20px; border-top: 2px solid #005ea5; padding: 20px; color: #005ea5; font-size: 14px; text-align: center; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                                        <p style="margin: 0;">本邮件由翼灵物联网工作室自动发出，请勿回复。</p>
+                                    </div>
+                                </div>
+                                <h3 style="font-family: 'Lucida Handwriting', cursive; text-align: center; margin-top: 20px;">Wingling</h3>
+                            </body>
+                            `
+                    };
+                    const res = await sendMail(mailOptions);
+                    console.log(res);
+                }
             }
 
             const excelBuffer = await workbook.xlsx.writeBuffer();
@@ -79,8 +118,8 @@ connectDB().then(() => {
                     <h3 style="margin-top: 10px; font-family: 'Lucida Handwriting', cursive; color: #ffffff;">翼灵物联网工作室</h3>
                     </div>
                     <div style="padding: 20px;">
-                    <p style="font-size: 18px; color: #333333; line-height: 1.6;">尊敬的管理员，本周考勤周报已送达</p>
-                    <p style="font-size: 18px; color: #333333; line-height: 1.6;">请及时查阅！</p>
+                    <p style="font-size: 18px; color: #555555; line-height: 1.6;">尊敬的管理员，本周考勤周报已送达</p>
+                    <p style="font-size: 18px; color: #555555; line-height: 1.6;">请及时查阅！</p>
                     </div>
                     <div style="display: flex; align-items: center; justify-content: center; margin-top: 20px; border-top: 2px solid #005ea5; padding: 20px; color: #005ea5; font-size: 14px; text-align: center; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
                     <p style="margin: 0;">本邮件由翼灵物联网工作室自动发出，请勿回复。</p>

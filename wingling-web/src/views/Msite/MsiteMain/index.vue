@@ -180,7 +180,7 @@ export default {
     .foot {
       margin-top: 5px;
       display: flex;
-      align-items: end;
+      align-items: flex-end;
       justify-content: space-between;
       font-size: 14px;
 
